@@ -1,16 +1,4 @@
-FROM openjdk:17 as build
+FROM eclipse-temurin:17-alpine
 WORKDIR /opt
-
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
-COPY src src
-
-RUN ./mvnw clean package -DskipTests
-
-COPY target/*.jar app.jar
-
-
-FROM openjdk:17
-COPY --from=build /opt/app.jar /opt/app.jar
-ENTRYPOINT ["java","${JAVA_OPTS}","-jar","app.jar"]
+COPY target/*.jar /opt/app.jar
+ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
